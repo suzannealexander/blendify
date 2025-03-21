@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime, date, time
 from sqlalchemy import (
+    create_engine,
     Integer,
     Float,
     String,
@@ -87,63 +88,92 @@ class GroupBase(Base):
     )  # all events/times in the group should use the reference timezone?
 
     # creator relationship
-    creator_id = Mapped[int] = mapped_column(Integer, ForeignKey("user.id"))
+    creator_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"))
     creator: Mapped["UserBase"] = relationship("user", back_populates="owned_groups")
 
     # member relationship
-    member_ids = Mapped[list[int]] = mapped_column(Integer, ForeignKey("user.id"))
+    member_ids: Mapped[list[int]] = mapped_column(Integer, ForeignKey("user.id"))
     members: Mapped[list["UserBase"]] = relationship(
         "user", back_populates="joined_groups"
     )
 
     # event relationship
-    event_ids = Mapped[list[int]] = mapped_column(Integer, ForeignKey("event.id"))
+    event_ids: Mapped[list[int]] = mapped_column(Integer, ForeignKey("event.id"))
     events: Mapped[list["EventBase"]] = relationship("event", back_populates="group")
 
     # cost relationship
-    cost_ids = Mapped[list[int]] = mapped_column(Integer, ForeignKey("cost.id"))
+    cost_ids: Mapped[list[int]] = mapped_column(Integer, ForeignKey("cost.id"))
     costs: Mapped[list["CostBase"]] = relationship("cost", back_populates="group")
 
 
 # pydantic classes
-class User(BaseModel):
-    id: int
-    name: str
-    username: str
-    password: str
-    email: str
-    photo_url: str  # can default to a blank placeholder?
+# class User(BaseModel):
+#     id: int
+#     name: str
+#     username: str
+#     password: str
+#     email: str
+#     photo_url: str  # can default to a blank placeholder?
 
-    class Config:
-        orm_mode: bool = True
+#     class Config:
+#         orm_mode: bool = True
+
+#     id: int
+#     name: str
+#     username: str
+#     # werkzeug.security generates 162 length hashes, modify with whatever we end up using
+#     password: str
+#     email: str
+#     photo_url: str
+
+#     # relationships
+#     owned_groups: Mapped[list["GroupBase"]] = relationship(back_populates="creator")
+#     joined_groups: Mapped[list["GroupBase"]] = relationship(back_populates="members")
+
+#     events: Mapped[list["EventBase"]] = relationship(back_populates="members")
+
+#     costs: Mapped[list["CostBase"]] = relationship(back_populates="senders")
+#     receipts: Mapped[list["CostBase"]] = relationship(back_populates="recipient")
 
 
-class Event(BaseModel):
-    id: int
-    name: str
-    first_date: str
-    first_time: str
-    repeat_every: str | None
-    users: None
+# class Event(BaseModel):
+#     id: int
+#     name: str
+#     first_date: str
+#     first_time: str
+#     repeat_every: str | None
+#     users: None
 
 
-class Cost(BaseModel):
-    name: str
-    users: None
-    category: str
-    amount: float
+# class Cost(BaseModel):
+#     name: str
+#     users: None
+#     category: str
+#     amount: float
 
 
-class Group(BaseModel):
-    group_id: str
-    name: str
-    status: str
-    expiration: str | None  # is there a better dtype for datetimes in pydantic
-    timezone: str  # all events/times in the group should use the reference timezone?
-    creator: User
-    members: list[User] = []
-    events: list[Event] = []
-    costs: list[Cost] = []
+# class Group(BaseModel):
+#     group_id: str
+#     name: str
+#     status: str
+#     expiration: str | None  # is there a better dtype for datetimes in pydantic
+#     timezone: str  # all events/times in the group should use the reference timezone?
+#     creator: User
+#     members: list[User] = []
+#     events: list[Event] = []
+#     costs: list[Cost] = []
 
-    class Config:
-        orm_mode: bool = True
+#     class Config:
+#         orm_mode: bool = True
+
+if __name__ == "__main__":
+    # instantiate the engine
+    engine = create_engine(
+        "sqlite+pysqlite:///:memory:",
+        future=True,
+        echo=True,
+        connect_args={"check_same_thread": False},
+    )
+
+    # create all tables using it
+    Base.metadata.create_all(engine)
