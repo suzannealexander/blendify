@@ -1,0 +1,8 @@
+fastapi==0.115.11
+uvicorn==0.34.0
+passlib==1.7.4
+ecdsa==0.19.1
+pyasn1==0.4.8
+rsa==4.9
+cryptography==44.0.2
+bcrypt==4.3.0
