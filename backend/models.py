@@ -11,6 +11,7 @@ from sqlalchemy import (
     Time,
 )
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from base_models import UserBase, EventBase, CostBase, GroupBase
 
 
 # instantiate declarative base
@@ -104,51 +105,6 @@ class GroupAlchemy(AlchemyBase):
     # cost relationship
     cost_ids: Mapped[list[int]] = mapped_column(Integer, ForeignKey("cost.id"))
     costs: Mapped[list["CostAlchemy"]] = relationship("cost", back_populates="group")
-
-
-# define base pydantic classes without relations
-class UserBase(BaseModel):
-    id: int
-    name: str
-    username: str
-    password: str
-    email: str
-    photo_url: str
-
-    class Config:
-        orm_mode: bool = True
-
-
-class EventBase(BaseModel):
-    id: int
-    name: str
-    first_date: str
-    first_time: str
-    repeat_every: str | None
-
-    class Config:
-        orm_mode: bool = True
-
-
-class CostBase(BaseModel):
-    id: int
-    name: str
-    category: str
-    amount: str
-
-    class Config:
-        orm_mode: bool = True
-
-
-class GroupBase(BaseModel):
-    id: str
-    name: str
-    status: str
-    expiration: str | None  # is there a better dtype for datetimes in pydantic?
-    timezone: str  # all events/times in the group should use the reference timezone?
-
-    class Config:
-        orm_mode: bool = True
 
 
 # define top-level pydantic classes *with* relations
