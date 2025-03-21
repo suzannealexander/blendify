@@ -14,11 +14,11 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 # instantiate declarative base
-class Base(DeclarativeBase):
+class AlchemyBase(DeclarativeBase):
     pass
 
 
-class UserBase(Base):
+class UserAlchemy(AlchemyBase):
     __tablename__ = "user"
     id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
     name: Mapped[str] = mapped_column(String(40), nullable=False)  # length okay?
@@ -29,16 +29,16 @@ class UserBase(Base):
     photo_url: Mapped[str] = mapped_column(String(60), nullable=False, default="None")
 
     # relationships
-    owned_groups: Mapped[list["GroupBase"]] = relationship(back_populates="creator")
-    joined_groups: Mapped[list["GroupBase"]] = relationship(back_populates="members")
+    owned_groups: Mapped[list["GroupAlchemy"]] = relationship(back_populates="creator")
+    joined_groups: Mapped[list["GroupAlchemy"]] = relationship(back_populates="members")
 
-    events: Mapped[list["EventBase"]] = relationship(back_populates="members")
+    events: Mapped[list["EventAlchemy"]] = relationship(back_populates="members")
 
-    costs: Mapped[list["CostBase"]] = relationship(back_populates="senders")
-    receipts: Mapped[list["CostBase"]] = relationship(back_populates="recipient")
+    costs: Mapped[list["CostAlchemy"]] = relationship(back_populates="senders")
+    receipts: Mapped[list["CostAlchemy"]] = relationship(back_populates="recipient")
 
 
-class EventBase(Base):
+class EventAlchemy(AlchemyBase):
     __tablename__ = "event"
     id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
     name: Mapped[str] = mapped_column(String(60), nullable=False)
@@ -48,14 +48,14 @@ class EventBase(Base):
 
     # user relationship
     member_ids: Mapped[list[int]] = mapped_column(Integer, ForeignKey("user.id"))
-    members: Mapped[list["UserBase"]] = relationship("user", back_populates="events")
+    members: Mapped[list["UserAlchemy"]] = relationship("user", back_populates="events")
 
     # group relationship
     group_id: Mapped[int] = mapped_column(Integer, ForeignKey("group.id"))
-    group: Mapped["GroupBase"] = relationship("group", back_populates="events")
+    group: Mapped["GroupAlchemy"] = relationship("group", back_populates="events")
 
 
-class CostBase(Base):
+class CostAlchemy(AlchemyBase):
     __tablename__ = "cost"
     id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
     name: Mapped[str] = mapped_column(String(60), nullable=False)
@@ -67,17 +67,17 @@ class CostBase(Base):
 
     # user relationship
     recipient_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"))
-    recipient: Mapped["UserBase"] = relationship("user", back_populates="receipts")
+    recipient: Mapped["UserAlchemy"] = relationship("user", back_populates="receipts")
 
     sender_ids: Mapped[list[int]] = mapped_column(Integer, ForeignKey("user.id"))
-    senders: Mapped[list["UserBase"]] = relationship("user", back_populates="costs")
+    senders: Mapped[list["UserAlchemy"]] = relationship("user", back_populates="costs")
 
     # group relationship
     group_id: Mapped[int] = mapped_column(Integer, ForeignKey("group.id"))
-    group: Mapped["GroupBase"] = relationship("group", back_populates="costs")
+    group: Mapped["GroupAlchemy"] = relationship("group", back_populates="costs")
 
 
-class GroupBase(Base):
+class GroupAlchemy(AlchemyBase):
     __tablename__ = "group"
     id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
     name: Mapped[str] = mapped_column(String(60), nullable=False)
@@ -89,82 +89,67 @@ class GroupBase(Base):
 
     # creator relationship
     creator_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"))
-    creator: Mapped["UserBase"] = relationship("user", back_populates="owned_groups")
+    creator: Mapped["UserAlchemy"] = relationship("user", back_populates="owned_groups")
 
     # member relationship
     member_ids: Mapped[list[int]] = mapped_column(Integer, ForeignKey("user.id"))
-    members: Mapped[list["UserBase"]] = relationship(
+    members: Mapped[list["UserAlchemy"]] = relationship(
         "user", back_populates="joined_groups"
     )
 
     # event relationship
     event_ids: Mapped[list[int]] = mapped_column(Integer, ForeignKey("event.id"))
-    events: Mapped[list["EventBase"]] = relationship("event", back_populates="group")
+    events: Mapped[list["EventAlchemy"]] = relationship("event", back_populates="group")
 
     # cost relationship
     cost_ids: Mapped[list[int]] = mapped_column(Integer, ForeignKey("cost.id"))
-    costs: Mapped[list["CostBase"]] = relationship("cost", back_populates="group")
+    costs: Mapped[list["CostAlchemy"]] = relationship("cost", back_populates="group")
 
 
-# pydantic classes
-# class User(BaseModel):
-#     id: int
-#     name: str
-#     username: str
-#     password: str
-#     email: str
-#     photo_url: str  # can default to a blank placeholder?
+# define base pydantic classes without relations
+class UserBase(BaseModel):
+    id: int
+    name: str
+    username: str
+    password: str
+    email: str
+    photo_url: str
 
-#     class Config:
-#         orm_mode: bool = True
-
-#     id: int
-#     name: str
-#     username: str
-#     # werkzeug.security generates 162 length hashes, modify with whatever we end up using
-#     password: str
-#     email: str
-#     photo_url: str
-
-#     # relationships
-#     owned_groups: Mapped[list["GroupBase"]] = relationship(back_populates="creator")
-#     joined_groups: Mapped[list["GroupBase"]] = relationship(back_populates="members")
-
-#     events: Mapped[list["EventBase"]] = relationship(back_populates="members")
-
-#     costs: Mapped[list["CostBase"]] = relationship(back_populates="senders")
-#     receipts: Mapped[list["CostBase"]] = relationship(back_populates="recipient")
+    class Config:
+        orm_mode: bool = True
 
 
-# class Event(BaseModel):
-#     id: int
-#     name: str
-#     first_date: str
-#     first_time: str
-#     repeat_every: str | None
-#     users: None
+class EvenBase(BaseModel):
+    id: int
+    name: str
+    first_date: str
+    first_time: str
+    repeat_every: str | None
+
+    class Config:
+        orm_mode: bool = True
 
 
-# class Cost(BaseModel):
-#     name: str
-#     users: None
-#     category: str
-#     amount: float
+class CostBase(BaseModel):
+    id: int
+    name: str
+    category: str
+    amount: str
+
+    class Config:
+        orm_mode: bool = True
 
 
-# class Group(BaseModel):
-#     group_id: str
-#     name: str
-#     status: str
-#     expiration: str | None  # is there a better dtype for datetimes in pydantic
-#     timezone: str  # all events/times in the group should use the reference timezone?
-#     creator: User
-#     members: list[User] = []
-#     events: list[Event] = []
-#     costs: list[Cost] = []
+class GroupBase(BaseModel):
+    id: str
+    name: str
+    status: str
+    expiration: str | None  # is there a better dtype for datetimes in pydantic?
+    timezone: str  # all events/times in the group should use the reference timezone?
 
-#     class Config:
-#         orm_mode: bool = True
+    class Config:
+        orm_mode: bool = True
+
 
 if __name__ == "__main__":
     # instantiate the engine
@@ -176,4 +161,4 @@ if __name__ == "__main__":
     )
 
     # create all tables using it
-    Base.metadata.create_all(engine)
+    AlchemyBase.metadata.create_all(engine)
