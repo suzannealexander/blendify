@@ -1,7 +1,7 @@
 "use client";
 
 import { Group } from "@/schema";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, use, useState } from "react";
 
 function GroupSelectorButton({
 	label,
@@ -65,7 +65,41 @@ export default function ContentFrame() {
 	return (
 		<div className="m-auto h-full w-full max-w-5xl bg-gray-100">
 			<GroupSelector groups={groups} />
-			hello world
+			<div className="flex h-full w-full flex-row flex-nowrap gap-12 p-10">
+				<ToDoFrame />
+				<CalendarFrame />
+			</div>
+		</div>
+	);
+}
+
+function ToDoFrame() {
+	const [timeframe, setTimeframe] = useState("Today");
+	// const stepBack = () => setTimeframe("Yesterday");
+	// const stepForward = () => setTimeframe("Tomorrow");
+
+	return (
+		<div className="flex w-1/2 flex-col border-[1px] border-gray-400 p-4">
+			<div className="h-max w-full text-center">To-Do</div>
+			<div className="flex h-max flex-row flex-nowrap justify-between gap-4 p-1">
+				<div className="w-full border-[1px] border-gray-400 text-center">
+					{"<"}
+				</div>
+				<div className="w-full text-center text-sm leading-6 text-gray-600">
+					{timeframe}
+				</div>
+				<div className="w-full border-[1px] border-gray-400 text-center">
+					{">"}
+				</div>
+			</div>
+		</div>
+	);
+}
+
+function CalendarFrame() {
+	return (
+		<div className="h-full w-full border-[1px] border-gray-400 p-4">
+			<div className="">(calendar goes here)</div>
 		</div>
 	);
 }
