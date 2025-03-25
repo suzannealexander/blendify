@@ -5,11 +5,11 @@ export default function Home() {
 	// home page at root ('/')
 	// if user is not authenticated, redirect them to login
 	return (
-		<div className="flex h-[100vh] w-[100vw] flex-col flex-nowrap bg-blue-200">
-			<div className="h-42 w-full bg-red-400">
+		<div className="flex h-[100vh] w-[100vw] flex-col flex-nowrap">
+			<div className="h-max w-full bg-gray-300 p-4">
 				<NavFrame />
 			</div>
-			<div className="h-full w-full items-center bg-red-200">
+			<div className="h-full w-full overflow-x-hidden overflow-y-auto">
 				<ContentFrame />
 			</div>
 		</div>
