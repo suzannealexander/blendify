@@ -55,15 +55,15 @@ export interface Group {
 	timezone: string; // timezone used for all group events
 
 	creatorId: number;
-	creator: User; // [User item that created the group, transferrable?]
+	creator?: User; // [User item that created the group, transferrable?]
 
 	memberIds: number[];
-	members: User[]; // [Array of User items]
+	members?: User[]; // [Array of User items]
 
 	eventIds: number[];
-	events: Event[]; // [Array of Event items, each should refer to a recurring/individual task/event which should be displayed on the group calendar]
+	events?: Event[]; // [Array of Event items, each should refer to a recurring/individual task/event which should be displayed on the group calendar]
 
 	costIds: number[];
-	costs: Cost[]; // [Array of Cost items, each should refer to a cost which is divvied up between selected members in the group]
+	costs?: Cost[]; // [Array of Cost items, each should refer to a cost which is divvied up between selected members in the group]
 	// [Theming options for users to customize colors/other?]
 }
