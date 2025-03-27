@@ -2,17 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { JSX } from "react";
 
-function ProfileFrame() {
-	return (
-		<Image
-			src="/profile-placeholder.png"
-			alt="Profile"
-			width={48}
-			height={48}
-			className="cursor-pointer rounded-[50%] object-cover"
-		/>
-	);
-}
+// function ProfileFrame() {
+// 	return (
+
+// 	);
+// }
 
 function NavButton({ label, href }: { label: string; href: string }) {
 	return (
@@ -25,10 +19,8 @@ function NavButton({ label, href }: { label: string; href: string }) {
 	);
 }
 
-export default function NavFrame() {
-	// placeholder
-	const unreadNotifications: boolean = false;
-	const searchSymbol: JSX.Element = (
+function NavSearchFrame() {
+	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			width="24"
@@ -45,7 +37,10 @@ export default function NavFrame() {
 			<path d="m21 21-4.3-4.3" />
 		</svg>
 	);
-	const settingsSymbol: JSX.Element = (
+}
+
+function NavSettingsFrame() {
+	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			width="24"
@@ -62,6 +57,13 @@ export default function NavFrame() {
 			<circle cx="12" cy="12" r="3" />
 		</svg>
 	);
+}
+
+function NavNotificationsFrame({
+	unreadNotifications,
+}: {
+	unreadNotifications: boolean;
+}) {
 	const defaultNotificationSymbol: JSX.Element = (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +103,22 @@ export default function NavFrame() {
 	const notificationSymbol: JSX.Element = unreadNotifications
 		? unreadNotificationSymbol
 		: defaultNotificationSymbol;
+	return notificationSymbol;
+}
 
+function NavProfileFrame() {
+	return (
+		<Image
+			src="/profile-placeholder.png"
+			alt="Profile"
+			width={48}
+			height={48}
+			className="cursor-pointer rounded-[50%] object-cover"
+		/>
+	);
+}
+
+export default function NavFrame() {
 	return (
 		<div className="m-auto flex h-max w-full max-w-5xl flex-row flex-nowrap items-center justify-between p-4">
 			<div className="flex flex-row items-center gap-8">
@@ -133,10 +150,10 @@ export default function NavFrame() {
 				</div>
 			</div>
 			<div className="flex flex-row flex-nowrap items-center gap-6">
-				{searchSymbol}
-				{settingsSymbol}
-				{notificationSymbol}
-				<ProfileFrame />
+				<NavSearchFrame />
+				<NavSettingsFrame />
+				<NavNotificationsFrame unreadNotifications={false} />
+				<NavProfileFrame />
 			</div>
 		</div>
 	);
