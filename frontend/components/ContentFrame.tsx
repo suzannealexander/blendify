@@ -5,19 +5,22 @@ import { Dispatch, SetStateAction, use, useState } from "react";
 
 function GroupSelectorButton({
 	label,
+	currentGroupId,
 	nextGroupId,
 	setGroupId,
 }: {
 	label: string;
-	nextGroupId: number | null;
+	currentGroupId: number | null;
+	nextGroupId: number;
 	setGroupId: Dispatch<SetStateAction<number | null>>;
 }) {
 	const handleClick = () => setGroupId(nextGroupId);
 	// make an explicit new version of this component to create new groups
 	// should it redirect the user or just set a diff page state?
+
 	return (
 		<div
-			className="border-[1px] border-gray-300 bg-gray-50 p-2 text-sm"
+			className="cursor-pointer rounded p-2 text-sm hover:bg-gray-50"
 			onClick={handleClick}
 		>
 			{label}
@@ -28,17 +31,19 @@ function GroupSelectorButton({
 function GroupSelector({ groups }: { groups: Group[] }) {
 	const [currentGroup, setCurrentGroup] = useState<number | null>(null);
 	return (
-		<div className="flex flex-row flex-nowrap items-center justify-center gap-8 bg-gray-200 p-4">
+		<div className="flex flex-row flex-nowrap items-center justify-center gap-8 border-b-[1px] border-gray-200 p-4">
 			<GroupSelectorButton
 				label={"+ New Group"}
-				nextGroupId={null}
+				currentGroupId={currentGroup}
+				nextGroupId={0}
 				setGroupId={setCurrentGroup}
 			/>
 			{groups.map((group: Group) => (
 				<GroupSelectorButton
 					key={group.id}
 					label={group.name}
-					nextGroupId={null}
+					currentGroupId={currentGroup}
+					nextGroupId={group.id}
 					setGroupId={setCurrentGroup}
 				/>
 			))}
@@ -63,7 +68,7 @@ export default function ContentFrame() {
 		},
 	];
 	return (
-		<div className="m-auto h-full w-full max-w-5xl bg-gray-100">
+		<div className="m-auto h-full w-full max-w-5xl">
 			<GroupSelector groups={groups} />
 			<div className="flex h-full w-full flex-row flex-nowrap gap-12 p-10">
 				<ToDoFrame />
@@ -73,24 +78,80 @@ export default function ContentFrame() {
 	);
 }
 
+interface ToDo {
+	label: string;
+	completed: boolean;
+}
+
+function ToDoItem({ todo }: { todo: ToDo }) {
+	return (
+		<div className="flex items-center gap-2 p-1 hover:bg-gray-50">
+			<input
+				type="checkbox"
+				checked={todo.completed}
+				readOnly
+				className="h-5 w-5 rounded-lg accent-purple-500"
+			/>
+			<span
+				className={todo.completed ? "text-gray-500 line-through" : ""}
+			>
+				{todo.label}
+			</span>
+		</div>
+	);
+}
+
 function ToDoFrame() {
 	const [timeframe, setTimeframe] = useState("Today");
-	// const stepBack = () => setTimeframe("Yesterday");
-	// const stepForward = () => setTimeframe("Tomorrow");
+	const toDoList: ToDo[] = [
+		{ label: "Vacuum living room", completed: true },
+		{ label: "Vacuum bedrooms", completed: true },
+		{ label: "Wash dishes", completed: false },
+		{ label: "Clean the kitchen", completed: false },
+	];
 
 	return (
-		<div className="flex w-1/2 flex-col border-[1px] border-gray-400 p-4">
-			<div className="h-max w-full text-center">To-Do</div>
-			<div className="flex h-max flex-row flex-nowrap justify-between gap-4 p-1">
-				<div className="w-full border-[1px] border-gray-400 text-center">
-					{"<"}
-				</div>
+		<div className="h-max w-1/2 rounded-lg border-[1px] border-gray-300 p-4">
+			<div className="h-max w-full text-center text-lg font-[500]">
+				To-Do
+			</div>
+			<div className="flex h-max flex-row flex-nowrap items-center justify-between p-1">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="48"
+					height="48"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					strokeWidth="2"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+					className="rounded-lg stroke-gray-400 hover:bg-gray-50 hover:stroke-purple-500"
+				>
+					<path d="m15 18-6-6 6-6" />
+				</svg>
 				<div className="w-full text-center text-sm leading-6 text-gray-600">
 					{timeframe}
 				</div>
-				<div className="w-full border-[1px] border-gray-400 text-center">
-					{">"}
-				</div>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="48"
+					height="48"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					strokeWidth="2"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+					className="rounded-lg stroke-gray-400 hover:bg-gray-50 hover:stroke-purple-500"
+				>
+					<path d="m9 18 6-6-6-6" />
+				</svg>
+			</div>
+			<div className="flex flex-col flex-nowrap gap-2 p-6">
+				{toDoList.map((toDo: ToDo, idx: number) => (
+					<ToDoItem key={idx} todo={toDo} />
+				))}
 			</div>
 		</div>
 	);
@@ -98,8 +159,11 @@ function ToDoFrame() {
 
 function CalendarFrame() {
 	return (
-		<div className="h-full w-full border-[1px] border-gray-400 p-4">
-			<div className="">(calendar goes here)</div>
+		<div className="h-max w-full rounded-lg border-[1px] border-gray-300 p-4">
+			<div className="h-max w-full text-center text-lg font-[500]">
+				Calendar
+			</div>
+			<div className="m-auto h-max w-max p-2">(put calendar here)</div>
 		</div>
 	);
 }
