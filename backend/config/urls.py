@@ -18,6 +18,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from chore_tracker.views import add_event_to_household
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path(
+        "backend/add_event_to_household",  # We'll probably want some naming conventions for these routes
+        add_event_to_household,
+        name="add_event_to_household",
+    ),
 ]
