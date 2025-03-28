@@ -1,9 +1,8 @@
 "use client";
 
-import dayjs, { Dayjs, months } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import localeData from "dayjs/plugin/localeData";
-import { useState } from "react";
 import { GroupDisplayData } from "@/schema";
 
 dayjs.extend(weekday);

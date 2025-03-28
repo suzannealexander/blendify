@@ -31,7 +31,11 @@ export default function HomeFrame({ userData }: { userData: UserDisplayData }) {
 	const homeContents =
 		currentGroup !== null ? (
 			<div className="flex h-full w-full flex-row flex-nowrap gap-12 p-10">
-				<ToDoFrame groupData={currentGroup} />
+				<ToDoFrame
+					groupData={currentGroup}
+					targetDate={targetDate}
+					setTargetDate={setTargetDate}
+				/>
 				<CalendarFrame
 					groupData={currentGroup}
 					currentDate={currentDate}

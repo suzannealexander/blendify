@@ -14,14 +14,17 @@ const placeholderUser: UserDisplayData = {
 				{
 					name: "Vacuum the living room",
 					date: "2025-03-26",
+					completed: false,
 				},
 				{
 					name: "Wash the car",
 					date: "2025-03-27",
+					completed: false,
 				},
 				{
 					name: "Clean the cat's water fountain",
 					date: "2025-03-29",
+					completed: false,
 				},
 			],
 		},
@@ -32,14 +35,17 @@ const placeholderUser: UserDisplayData = {
 				{
 					name: "Take out the trash",
 					date: "2025-03-29",
+					completed: false,
 				},
 				{
 					name: "Clean the kitchen",
 					date: "2025-03-30",
+					completed: false,
 				},
 				{
 					name: "Clean AirBNB before checkout",
 					date: "2025-04-01",
+					completed: false,
 				},
 			],
 		},
