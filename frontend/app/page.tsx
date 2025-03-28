@@ -1,4 +1,4 @@
-import ContentFrame from "@/components/ContentFrame";
+import HomeFrame from "@/components/HomeFrame";
 import PageLayout from "@/components/PageLayout";
 
 export default function Home() {
@@ -6,7 +6,7 @@ export default function Home() {
 	// if user is not authenticated, redirect them to login
 	return (
 		<PageLayout>
-			<ContentFrame />
+			<HomeFrame />
 		</PageLayout>
 	);
 }
