@@ -17,13 +17,53 @@ const placeholderUser: UserDisplayData = {
 					completed: false,
 				},
 				{
+					name: "Do the laundry",
+					date: "2025-03-26",
+					completed: false,
+				},
+				{
 					name: "Wash the car",
 					date: "2025-03-27",
 					completed: false,
 				},
 				{
+					name: "Take out recycling",
+					date: "2025-03-27",
+					completed: false,
+				},
+				{
+					name: "Dust shelves and furniture",
+					date: "2025-03-28",
+					completed: false,
+				},
+				{
+					name: "Mop the kitchen floor",
+					date: "2025-03-28",
+					completed: false,
+				},
+				{
 					name: "Clean the cat's water fountain",
 					date: "2025-03-29",
+					completed: false,
+				},
+				{
+					name: "Organize the pantry",
+					date: "2025-03-29",
+					completed: false,
+				},
+				{
+					name: "Water the plants",
+					date: "2025-03-30",
+					completed: false,
+				},
+				{
+					name: "Deep clean the bathroom",
+					date: "2025-03-30",
+					completed: false,
+				},
+				{
+					name: "Change bed sheets",
+					date: "2025-03-31",
 					completed: false,
 				},
 			],
@@ -43,7 +83,27 @@ const placeholderUser: UserDisplayData = {
 					completed: false,
 				},
 				{
+					name: "Wipe down bathroom counters",
+					date: "2025-03-30",
+					completed: false,
+				},
+				{
+					name: "Sweep entryway",
+					date: "2025-03-31",
+					completed: false,
+				},
+				{
+					name: "Pack up luggage",
+					date: "2025-03-31",
+					completed: false,
+				},
+				{
 					name: "Clean AirBNB before checkout",
+					date: "2025-04-01",
+					completed: false,
+				},
+				{
+					name: "Check for forgotten items",
 					date: "2025-04-01",
 					completed: false,
 				},
