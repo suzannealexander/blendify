@@ -1,4 +1,4 @@
-import NavFrame from "@/components/NavFrame";
+import PageLayout from "@/components/PageLayout";
 import SignupForm from "@/components/SignupForm";
 import Link from "next/link";
 
@@ -24,13 +24,8 @@ function SignupFrame() {
 }
 export default function SignupPage() {
 	return (
-		<div className="flex h-[100vh] w-[100vw] flex-col flex-nowrap">
-			<div className="h-max w-full border-b-[1px] border-gray-300 p-4 shadow-sm">
-				<NavFrame />
-			</div>
-			<div className="h-full w-full overflow-x-hidden overflow-y-auto">
-				<SignupFrame />
-			</div>
-		</div>
+		<PageLayout>
+			<SignupFrame />
+		</PageLayout>
 	);
 }
