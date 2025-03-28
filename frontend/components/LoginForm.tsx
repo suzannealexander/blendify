@@ -4,14 +4,16 @@ import { useState } from 'react'
 import Input from '@/components/Input'
 import Button from '@/components/Button'
 import Link from 'next/link'
+import {useRouter} from "next/navigation";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: '',
     rememberMe: false
   })
-
+    const [, setErrorMessage] = useState<string | null>(null)
+    const router = useRouter()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, type, value, checked } = e.target
     setFormData(prev => ({
@@ -20,20 +22,42 @@ export default function LoginForm() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Implement actual login logic
-    console.log('Login submitted', formData)
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/login/',{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: formData.username.toLowerCase(),
+                password: formData.password
+            }),
+            credentials: 'include',
+        })
+          if (response.ok){
+              router.push('/')
+              console.log('Login submitted', formData)
+          } else{
+              const errorData = await response.json()
+              setErrorMessage(errorData.error || 'Login failed. Please try again.')
+              alert("Login failed. Please try again.")
+          }
+      }
+      catch (error){
+        setErrorMessage("An error occurred, please try again")
+      }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <Input 
-        type="email"
-        name="email"
-        label="Email"
-        placeholder="Enter your email"
-        value={formData.email}
+        type="username"
+        name="username"
+        label="Username"
+        placeholder="Enter your username"
+        value={formData.username}
         onChange={handleChange}
         required
       />

@@ -4,15 +4,18 @@ import { useState } from 'react'
 import Input from '@/components/Input'
 import Button from '@/components/Button'
 import PasswordRequirements from '@/components/PasswordReqs'
+import { useRouter } from 'next/navigation'
 
 export default function SignupForm() {
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
     password: ''
   })
 
   const [passwordErrors, setPasswordErrors] = useState<string[]>([])
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const router = useRouter()
 
   const validatePassword = (password: string) => {
     const errors: string[] = []
@@ -36,26 +39,75 @@ export default function SignupForm() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (validatePassword(formData.password)) {
-      // TODO: Implement actual signup logic
-      console.log('Form submitted', formData)
+
+    if (!validatePassword(formData.password)) {
+      console.log('Invalid password')
+      return
+    }
+
+    try {
+      const res = await fetch('http://127.0.0.1:8000/api/register/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password
+        }),
+      })
+      if (!res.ok) {
+        const errorData = await res.json();
+        alert(`Signup Error: ${errorData.error}`);
+        setErrorMessage(errorData.error || 'Signup failed');
+      }
+
+
+      if (res.ok) {
+        console.log('Signup successful')
+
+        const loginRes = await fetch('http://127.0.0.1:8000/api/login/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            username: formData.username,
+            password: formData.password
+          })
+        })
+
+        if (loginRes.ok) {
+          console.log('Login successful')
+          router.push('/')
+        } else {
+          const errorData = await loginRes.json()
+          setErrorMessage(errorData.error || 'Login failed after signup')
+        }
+      } else {
+        const errorData = await res.json()
+        setErrorMessage(errorData.error || 'Signup failed')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      setErrorMessage('An unexpected error occurred')
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <Input 
+      {errorMessage && <div className="text-red-500">{errorMessage}</div>}
+
+      <Input
         type="text"
-        name="name"
-        label="Name"
-        placeholder="Enter your name"
-        value={formData.name}
+        name="username"
+        label="Username"
+        placeholder="Enter your username"
+        value={formData.username}
         onChange={handleChange}
         required
       />
-      <Input 
+      <Input
         type="email"
         name="email"
         label="Email"
@@ -65,7 +117,7 @@ export default function SignupForm() {
         required
       />
       <div>
-        <Input 
+        <Input
           type="password"
           name="password"
           label="Password"
@@ -76,8 +128,8 @@ export default function SignupForm() {
         />
         <PasswordRequirements errors={passwordErrors} />
       </div>
-      <Button 
-        type="submit" 
+      <Button
+        type="submit"
         className="w-full"
         disabled={passwordErrors.length > 0}
       >
