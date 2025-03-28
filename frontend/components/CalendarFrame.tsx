@@ -1,33 +1,50 @@
 "use client";
 
-import dayjs, { Dayjs } from "dayjs";
+import dayjs, { Dayjs, months } from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import localeData from "dayjs/plugin/localeData";
 import { useState } from "react";
+import { GroupDisplayData } from "@/schema";
 
 dayjs.extend(weekday);
 dayjs.extend(localeData);
 
-export default function CalendarFrame() {
-	const today: Dayjs = dayjs();
-	const [currentDate, setCurrentDate] = useState<Dayjs>(today);
-
+export default function CalendarFrame({
+	groupData,
+	currentDate,
+	displayDate,
+	setDisplayDate,
+	targetDate,
+	setTargetDate,
+}: {
+	groupData: GroupDisplayData;
+	currentDate: Dayjs;
+	displayDate: Dayjs;
+	setDisplayDate: CallableFunction;
+	targetDate: Dayjs;
+	setTargetDate: CallableFunction;
+}) {
 	const handlePrevMonth = () => {
-		setCurrentDate(currentDate.subtract(1, "month"));
+		setDisplayDate(displayDate.subtract(1, "month"));
 	};
 
 	const handleNextMonth = () => {
-		setCurrentDate(currentDate.add(1, "month"));
+		setDisplayDate(displayDate.add(1, "month"));
 	};
 
 	return (
 		<div className="h-max w-full rounded-lg border-[1px] border-gray-300 p-4 shadow-sm">
 			<CalendarHeader
-				currentDate={currentDate}
+				currentDate={displayDate}
 				onPrev={handlePrevMonth}
 				onNext={handleNextMonth}
 			/>
-			<CalendarGrid currentDate={currentDate} today={today} />
+			<CalendarGrid
+				displayDate={displayDate}
+				currentDate={currentDate}
+				targetDate={targetDate}
+				setTargetDate={setTargetDate}
+			/>
 		</div>
 	);
 }
@@ -81,13 +98,20 @@ function CalendarHeader({ currentDate, onPrev, onNext }: CalendarHeaderProps) {
 }
 
 type CalendarGridProps = {
+	displayDate: Dayjs;
 	currentDate: Dayjs;
-	today: Dayjs;
+	targetDate: Dayjs;
+	setTargetDate: CallableFunction;
 };
 
-function CalendarGrid({ currentDate, today }: CalendarGridProps) {
-	const startOfMonth = currentDate.startOf("month");
-	const endOfMonth = currentDate.endOf("month");
+function CalendarGrid({
+	displayDate,
+	currentDate,
+	targetDate,
+	setTargetDate,
+}: CalendarGridProps) {
+	const startOfMonth = displayDate.startOf("month");
+	const endOfMonth = displayDate.endOf("month");
 	const startDay = startOfMonth.weekday();
 	const daysInMonth = endOfMonth.date();
 
@@ -122,8 +146,10 @@ function CalendarGrid({ currentDate, today }: CalendarGridProps) {
 						<CalendarDay
 							key={`${i}-${j}`}
 							day={day}
-							today={today}
 							currentDate={currentDate}
+							displayDate={displayDate}
+							targetDate={targetDate}
+							setTargetDate={setTargetDate}
 						/>
 					)),
 				)}
@@ -134,27 +160,63 @@ function CalendarGrid({ currentDate, today }: CalendarGridProps) {
 
 type CalendarDayProps = {
 	day: number | null;
-	today: Dayjs;
 	currentDate: Dayjs;
+	displayDate: Dayjs;
+	targetDate: Dayjs;
+	setTargetDate: CallableFunction;
 };
 
-function CalendarDay({ day, today, currentDate }: CalendarDayProps) {
-	const isToday =
-		day !== null &&
-		today.date() === day &&
-		today.month() === currentDate.month() &&
-		today.year() === currentDate.year();
+function CalendarDay({
+	day,
+	currentDate,
+	displayDate,
+	targetDate,
+	setTargetDate,
+}: CalendarDayProps) {
+	const handleClick = () =>
+		day
+			? setTargetDate(
+					dayjs()
+						.set("date", day)
+						.set("month", displayDate.month())
+						.set("year", displayDate.year()),
+				)
+			: null;
+
+	const isCurrentDate: boolean =
+		currentDate.date() === day &&
+		currentDate.month() === displayDate.month() &&
+		currentDate.year() === displayDate.year();
+
+	const isTargetDate: boolean =
+		targetDate.date() === day &&
+		targetDate.month() === displayDate.month() &&
+		targetDate.year() === displayDate.year();
+
+	var classElements: string =
+		"flex h-16 items-start justify-start rounded-md p-2 text-left text-sm font-semibold";
+
+	// don't consider anything else if the day is null
+	if (day === null) {
+		classElements = classElements + " bg-gray-50";
+	} else {
+		// style the current date differently
+		if (isCurrentDate) {
+			classElements =
+				classElements +
+				" bg-purple-200 hover:bg-purple-300 text-purple-900";
+		} else {
+			classElements = classElements + " bg-gray-100 hover:bg-gray-200";
+		}
+
+		// style the target date differently
+		if (isTargetDate) {
+			classElements = classElements + " ring-3 ring-purple-600";
+		}
+	}
 
 	return (
-		<div
-			className={`flex h-16 items-start justify-start rounded-md p-2 text-left text-sm font-semibold ${
-				day
-					? isToday
-						? "bg-purple-200 text-purple-800 hover:bg-purple-300"
-						: "bg-gray-100 hover:bg-gray-200"
-					: ""
-			}`}
-		>
+		<div className={classElements} onClick={handleClick}>
 			{day && <span>{day}</span>}
 		</div>
 	);
