@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState } from 'react'
 import Input from '@/components/Input'
@@ -17,27 +17,27 @@ export default function SignupForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const router = useRouter()
 
-  const validatePassword = (password: string) => {
-    const errors: string[] = []
-    if (password.length < 8) errors.push('Must be at least 8 characters')
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-      errors.push('Must contain one special character')
-    }
-    setPasswordErrors(errors)
-    return errors.length === 0
-  }
+	const validatePassword = (password: string) => {
+		const errors: string[] = [];
+		if (password.length < 8) errors.push("Must be at least 8 characters");
+		if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+			errors.push("Must contain one special character");
+		}
+		setPasswordErrors(errors);
+		return errors.length === 0;
+	};
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setFormData((prev) => ({
+			...prev,
+			[name]: value,
+		}));
 
-    if (name === 'password') {
-      validatePassword(value)
-    }
-  }
+		if (name === "password") {
+			validatePassword(value);
+		}
+	};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

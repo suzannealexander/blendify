@@ -6,7 +6,7 @@ export default function Home() {
 	// if user is not authenticated, redirect them to login
 	return (
 		<div className="flex h-[100vh] w-[100vw] flex-col flex-nowrap">
-			<div className="h-max w-full bg-gray-300 p-4">
+			<div className="h-max w-full border-b-[1px] border-gray-300 p-4">
 				<NavFrame />
 			</div>
 			<div className="h-full w-full overflow-x-hidden overflow-y-auto">
