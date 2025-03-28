@@ -53,7 +53,7 @@ function GroupSelector({ groups }: { groups: Group[] }) {
 	);
 }
 
-export default function ContentFrame() {
+export default function HomeFrame() {
 	// query whether the user is a member of any groups
 	// placeholder for now
 	const groups: Group[] = [
