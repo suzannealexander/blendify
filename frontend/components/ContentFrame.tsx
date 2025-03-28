@@ -111,7 +111,7 @@ function ToDoFrame() {
 	];
 
 	return (
-		<div className="h-max w-1/2 rounded-lg border-[1px] border-gray-300 p-4">
+		<div className="h-max w-1/2 rounded-lg border-[1px] border-gray-300 p-4 shadow-sm">
 			<div className="h-max w-full text-center text-lg font-[500]">
 				To-Do
 			</div>
@@ -159,7 +159,7 @@ function ToDoFrame() {
 
 function CalendarFrame() {
 	return (
-		<div className="h-max w-full rounded-lg border-[1px] border-gray-300 p-4">
+		<div className="h-max w-full rounded-lg border-[1px] border-gray-300 p-4 shadow-sm">
 			<div className="h-max w-full text-center text-lg font-[500]">
 				Calendar
 			</div>
