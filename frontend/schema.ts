@@ -55,6 +55,7 @@ necessary mvp actions
 export interface EventDisplayData {
 	name: string;
 	date: string;
+	completed: boolean;
 }
 
 // expected format for general group display data passed to frontend pages
