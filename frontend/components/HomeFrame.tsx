@@ -5,6 +5,33 @@ import { Dispatch, SetStateAction, use, useState } from "react";
 import CalendarFrame from "@/components/CalendarFrame";
 import ToDoFrame from "@/components/ToDoFrame";
 
+export default function HomeFrame() {
+	// query whether the user is a member of any groups
+	// placeholder for now
+	const groups: Group[] = [
+		{
+			id: 1,
+			name: "Test Group",
+			status: "active",
+			expiration: null,
+			timezone: "est", // consider this later
+			creatorId: 0,
+			memberIds: [],
+			eventIds: [],
+			costIds: [],
+		},
+	];
+	return (
+		<div className="m-auto h-max w-full max-w-5xl">
+			<GroupSelector groups={groups} />
+			<div className="flex h-full w-full flex-row flex-nowrap gap-12 p-10">
+				<ToDoFrame />
+				<CalendarFrame />
+			</div>
+		</div>
+	);
+}
+
 function GroupSelectorButton({
 	label,
 	currentGroupId,
@@ -49,33 +76,6 @@ function GroupSelector({ groups }: { groups: Group[] }) {
 					setGroupId={setCurrentGroup}
 				/>
 			))}
-		</div>
-	);
-}
-
-export default function HomeFrame() {
-	// query whether the user is a member of any groups
-	// placeholder for now
-	const groups: Group[] = [
-		{
-			id: 1,
-			name: "Test Group",
-			status: "active",
-			expiration: null,
-			timezone: "est", // consider this later
-			creatorId: 0,
-			memberIds: [],
-			eventIds: [],
-			costIds: [],
-		},
-	];
-	return (
-		<div className="m-auto h-max w-full max-w-5xl">
-			<GroupSelector groups={groups} />
-			<div className="flex h-full w-full flex-row flex-nowrap gap-12 p-10">
-				<ToDoFrame />
-				<CalendarFrame />
-			</div>
 		</div>
 	);
 }
