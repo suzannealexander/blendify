@@ -25,7 +25,7 @@ function SignupFrame() {
 export default function SignupPage() {
 	return (
 		<div className="flex h-[100vh] w-[100vw] flex-col flex-nowrap">
-			<div className="h-max w-full border-b-[1px] border-gray-300 p-4">
+			<div className="h-max w-full border-b-[1px] border-gray-300 p-4 shadow-sm">
 				<NavFrame />
 			</div>
 			<div className="h-full w-full overflow-x-hidden overflow-y-auto">

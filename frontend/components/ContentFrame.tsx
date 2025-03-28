@@ -2,6 +2,8 @@
 
 import { Group } from "@/schema";
 import { Dispatch, SetStateAction, use, useState } from "react";
+import CalendarFrame from "@/components/CalendarFrame";
+import ToDoFrame from "@/components/ToDoFrame";
 
 function GroupSelectorButton({
 	label,
@@ -68,102 +70,12 @@ export default function ContentFrame() {
 		},
 	];
 	return (
-		<div className="m-auto h-full w-full max-w-5xl">
+		<div className="m-auto h-max w-full max-w-5xl">
 			<GroupSelector groups={groups} />
 			<div className="flex h-full w-full flex-row flex-nowrap gap-12 p-10">
 				<ToDoFrame />
 				<CalendarFrame />
 			</div>
-		</div>
-	);
-}
-
-interface ToDo {
-	label: string;
-	completed: boolean;
-}
-
-function ToDoItem({ todo }: { todo: ToDo }) {
-	return (
-		<div className="flex items-center gap-2 p-1 hover:bg-gray-50">
-			<input
-				type="checkbox"
-				checked={todo.completed}
-				readOnly
-				className="h-5 w-5 rounded-lg accent-purple-500"
-			/>
-			<span
-				className={todo.completed ? "text-gray-500 line-through" : ""}
-			>
-				{todo.label}
-			</span>
-		</div>
-	);
-}
-
-function ToDoFrame() {
-	const [timeframe, setTimeframe] = useState("Today");
-	const toDoList: ToDo[] = [
-		{ label: "Vacuum living room", completed: true },
-		{ label: "Vacuum bedrooms", completed: true },
-		{ label: "Wash dishes", completed: false },
-		{ label: "Clean the kitchen", completed: false },
-	];
-
-	return (
-		<div className="h-max w-1/2 rounded-lg border-[1px] border-gray-300 p-4">
-			<div className="h-max w-full text-center text-lg font-[500]">
-				To-Do
-			</div>
-			<div className="flex h-max flex-row flex-nowrap items-center justify-between p-1">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="48"
-					height="48"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					strokeWidth="2"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-					className="rounded-lg stroke-gray-400 hover:bg-gray-50 hover:stroke-purple-500"
-				>
-					<path d="m15 18-6-6 6-6" />
-				</svg>
-				<div className="w-full text-center text-sm leading-6 text-gray-600">
-					{timeframe}
-				</div>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="48"
-					height="48"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					strokeWidth="2"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-					className="rounded-lg stroke-gray-400 hover:bg-gray-50 hover:stroke-purple-500"
-				>
-					<path d="m9 18 6-6-6-6" />
-				</svg>
-			</div>
-			<div className="flex flex-col flex-nowrap gap-2 p-6">
-				{toDoList.map((toDo: ToDo, idx: number) => (
-					<ToDoItem key={idx} todo={toDo} />
-				))}
-			</div>
-		</div>
-	);
-}
-
-function CalendarFrame() {
-	return (
-		<div className="h-max w-full rounded-lg border-[1px] border-gray-300 p-4">
-			<div className="h-max w-full text-center text-lg font-[500]">
-				Calendar
-			</div>
-			<div className="m-auto h-max w-max p-2">(put calendar here)</div>
 		</div>
 	);
 }
