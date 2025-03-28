@@ -1,29 +1,14 @@
 "use client";
 
-import { Group } from "@/schema";
 import { Dispatch, SetStateAction, use, useState } from "react";
 import CalendarFrame from "@/components/CalendarFrame";
 import ToDoFrame from "@/components/ToDoFrame";
+import { GroupDisplayData, UserDisplayData } from "@/schema";
 
-export default function HomeFrame() {
-	// query whether the user is a member of any groups
-	// placeholder for now
-	const groups: Group[] = [
-		{
-			id: 1,
-			name: "Test Group",
-			status: "active",
-			expiration: null,
-			timezone: "est", // consider this later
-			creatorId: 0,
-			memberIds: [],
-			eventIds: [],
-			costIds: [],
-		},
-	];
+export default function HomeFrame({ userData }: { userData: UserDisplayData }) {
 	return (
 		<div className="m-auto h-max w-full max-w-5xl">
-			<GroupSelector groups={groups} />
+			<GroupSelector groups={userData.groups} />
 			<div className="flex h-full w-full flex-row flex-nowrap gap-12 p-10">
 				<ToDoFrame />
 				<CalendarFrame />
@@ -57,7 +42,7 @@ function GroupSelectorButton({
 	);
 }
 
-function GroupSelector({ groups }: { groups: Group[] }) {
+function GroupSelector({ groups }: { groups: GroupDisplayData[] }) {
 	const [currentGroup, setCurrentGroup] = useState<number | null>(null);
 	return (
 		<div className="flex flex-row flex-nowrap items-center justify-center gap-8 border-b-[1px] border-gray-200 p-4">
@@ -67,7 +52,7 @@ function GroupSelector({ groups }: { groups: Group[] }) {
 				nextGroupId={0}
 				setGroupId={setCurrentGroup}
 			/>
-			{groups.map((group: Group) => (
+			{groups.map((group: GroupDisplayData) => (
 				<GroupSelectorButton
 					key={group.id}
 					label={group.name}

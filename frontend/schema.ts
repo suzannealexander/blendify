@@ -51,6 +51,28 @@ necessary mvp actions
 
 // this file should always be kept consistent with our current database model schemas
 
+// expected format for general event display data passed to frontend pages
+export interface EventDisplayData {
+	name: string;
+	date: string;
+}
+
+// expected format for general group display data passed to frontend pages
+export interface GroupDisplayData {
+	id: number;
+	name: string;
+	events: EventDisplayData[];
+}
+
+// expected format for general user display data passed to frontend pages
+export interface UserDisplayData {
+	id: number;
+	username: string;
+	photoPath: string;
+	groups: GroupDisplayData[];
+}
+
+// database schemas
 export interface User {
 	id: number;
 	name: string;
