@@ -117,6 +117,20 @@ export interface Event {
 	group: Group;
 }
 
+export interface AddEventRequest {
+	name: string;
+	date: string;
+
+	memberIds: number[];
+
+	groupId: number;
+}
+
+export interface AddEventResponse {
+	success: boolean;
+	message: string;
+}
+
 export interface Cost {
 	id: number;
 	name: string;
