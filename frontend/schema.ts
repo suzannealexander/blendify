@@ -118,15 +118,12 @@ export interface Event {
 }
 
 export interface AddEventRequest {
-	id: number;
 	name: string;
 	date: string;
 
 	memberIds: number[];
-	members: User[];
 
 	groupId: number;
-	group: Group;
 }
 
 export interface AddEventResponse {
