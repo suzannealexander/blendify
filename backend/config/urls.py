@@ -16,7 +16,7 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from chore_tracker.views import add_event_to_household
 
@@ -27,4 +27,5 @@ urlpatterns = [
         add_event_to_household,
         name="add_event_to_household",
     ),
+    path('api/', include('chore_tracker.urls'))
 ]
