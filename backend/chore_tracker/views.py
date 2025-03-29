@@ -75,7 +75,7 @@ class LoginView(APIView):
             return Response({"error": "Invalid credentials"}, status=401)
 
 
-def add_event_to_household(request):
+def create_event(request):
 
     if request.method == "POST":
         try:

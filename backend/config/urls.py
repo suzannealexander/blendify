@@ -18,14 +18,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from chore_tracker.views import add_event_to_household
+from chore_tracker.views import create_event
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path(
-        "backend/add_event_to_household",  # We'll probably want some naming conventions for these routes
-        add_event_to_household,
-        name="add_event_to_household",
+        "/event/create",
+        create_event,
+        name="create_event",
     ),
-    path('api/', include('chore_tracker.urls'))
+    path("api/", include("chore_tracker.urls")),
 ]
