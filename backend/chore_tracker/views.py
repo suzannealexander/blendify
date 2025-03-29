@@ -10,7 +10,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 import datetime
 import json
 from json import JSONDecodeError
-from .models import Event, Group
+from .models import Event
+from backend.chore_tracker.models import Group
 
 
 class RegisterUser(APIView):
@@ -118,3 +119,30 @@ def create_event(request):
     return JsonResponse(
         {"success": False, "message": "Expected POST method"}, status=405
     )
+
+
+class CreateGroup(APIView):
+    """ Create a Group """
+
+    def post(self, request):
+        name = request.data.get('name')
+        status = request.data.get('status')
+        expiration = request.data.get('expiration')
+        timezone = request.data.get('timezone')
+        creator = request.user
+
+        try:
+            group = Group.objects.create(
+                name=name,
+                status=status,
+                expiration=expiration,
+                timezone=timezone,
+                creator=creator
+            )
+
+            group.members.add(creator)
+            return Response({'message': 'Group created successfully'}, status=201)
+        except ValidationError as e:
+            return Response({'error': str(e)}, status=400)
+        except Exception as e:
+            return Response({'error': 'Failed to create group: ' + str(e)}, status=500)
