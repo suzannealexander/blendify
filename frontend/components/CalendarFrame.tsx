@@ -3,7 +3,7 @@
 import dayjs, { Dayjs } from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import localeData from "dayjs/plugin/localeData";
-import { GroupDisplayData } from "@/schema";
+import { EventDisplayData, GroupDisplayData } from "@/schema";
 
 dayjs.extend(weekday);
 dayjs.extend(localeData);
@@ -31,6 +31,11 @@ export default function CalendarFrame({
 		setDisplayDate(displayDate.add(1, "month"));
 	};
 
+	const eventDates: Set<number> = getEventDatesInMonth(
+		groupData.events,
+		displayDate,
+	);
+
 	return (
 		<div className="h-max w-full rounded-lg border-[1px] border-gray-300 p-4 shadow-sm">
 			<CalendarHeader
@@ -39,6 +44,7 @@ export default function CalendarFrame({
 				onNext={handleNextMonth}
 			/>
 			<CalendarGrid
+				eventDates={eventDates}
 				displayDate={displayDate}
 				currentDate={currentDate}
 				targetDate={targetDate}
@@ -97,13 +103,31 @@ function CalendarHeader({ currentDate, onPrev, onNext }: CalendarHeaderProps) {
 }
 
 type CalendarGridProps = {
+	eventDates: Set<number>;
 	displayDate: Dayjs;
 	currentDate: Dayjs;
 	targetDate: Dayjs;
 	setTargetDate: CallableFunction;
 };
 
+function getEventDatesInMonth(
+	events: EventDisplayData[],
+	displayDate: Dayjs,
+): Set<number> {
+	const eventDates = new Set<number>();
+
+	events.forEach((event) => {
+		const eventDate = dayjs(event.date);
+		if (eventDate.isSame(displayDate, "month")) {
+			eventDates.add(eventDate.date());
+		}
+	});
+
+	return eventDates;
+}
+
 function CalendarGrid({
+	eventDates,
 	displayDate,
 	currentDate,
 	targetDate,
@@ -145,6 +169,7 @@ function CalendarGrid({
 						<CalendarDay
 							key={`${i}-${j}`}
 							day={day}
+							isEventDay={day ? eventDates.has(day) : false}
 							currentDate={currentDate}
 							displayDate={displayDate}
 							targetDate={targetDate}
@@ -159,6 +184,7 @@ function CalendarGrid({
 
 type CalendarDayProps = {
 	day: number | null;
+	isEventDay: boolean;
 	currentDate: Dayjs;
 	displayDate: Dayjs;
 	targetDate: Dayjs;
@@ -167,6 +193,7 @@ type CalendarDayProps = {
 
 function CalendarDay({
 	day,
+	isEventDay,
 	currentDate,
 	displayDate,
 	targetDate,
@@ -193,7 +220,7 @@ function CalendarDay({
 		targetDate.year() === displayDate.year();
 
 	var classElements: string =
-		"flex h-16 items-start justify-start rounded-md p-2 text-left text-sm font-semibold";
+		"flex h-16 items-start justify-start rounded-md p-1.5 text-left text-sm font-semibold";
 
 	// don't consider anything else if the day is null
 	if (day === null) {
@@ -216,7 +243,17 @@ function CalendarDay({
 
 	return (
 		<div className={classElements} onClick={handleClick}>
-			{day && <span>{day}</span>}
+			{day && (
+				<span
+					className={
+						isEventDay === true
+							? "h-6 w-6 rounded-[50%] bg-purple-600 p-0.5 text-center text-white"
+							: "h-6 w-6 rounded-[50%] p-0.5 text-center"
+					}
+				>
+					{day}
+				</span>
+			)}
 		</div>
 	);
 }
